@@ -49,7 +49,7 @@ public class ReservationServiceImpl implements ReservationService {
         Spot spot = new Spot();
 
         for(Spot spot1 : spotList){
-            if(spot1.getOccupied()==false){
+            if(!spot1.getOccupied()){
                 if( getSpotTypeInNumber(spotType) <= getSpotTypeInNumber(spot1.getSpotType())){
                     if(spot.getPricePerHour() == 0){
                         spot =spot1;

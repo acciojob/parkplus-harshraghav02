@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ParkingLotServiceImpl implements ParkingLotService {
@@ -48,21 +49,28 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
     @Override
     public void deleteSpot(int spotId) {
-        Spot spot = spotRepository1.findById(spotId).get();
-        ParkingLot parkingLot = spot.getParkingLot();
-        parkingLot.getSpotList().remove(spot);
-        spotRepository1.deleteById(spotId);
+        Optional<Spot> spot = spotRepository1.findById(spotId);
+        if(spot.isPresent()) {
+            ParkingLot parkingLot = spot.get().getParkingLot();
+            parkingLot.getSpotList().remove(spot);
+            spotRepository1.deleteById(spotId);
+        }
 
     }
 
     @Override
     public Spot updateSpot(int parkingLotId, int spotId, int pricePerHour) {
-        Spot spot = spotRepository1.findById(spotId).get();
-        ParkingLot parkingLot = spot.getParkingLot();
-        spot.setPricePerHour(pricePerHour);
-        parkingLotRepository1.save(parkingLot);
+        Optional<Spot> spot = spotRepository1.findById(spotId);
+        if(spot.isPresent()) {
+            Spot spot1 = spot.get();
+            ParkingLot parkingLot = spot1.getParkingLot();
+            spot1.setPricePerHour(pricePerHour);
+            parkingLotRepository1.save(parkingLot);
+            return spotRepository1.save(spot1);
+        }
 
-        return spot;
+        return null;
+
     }
 
     @Override
